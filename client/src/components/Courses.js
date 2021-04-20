@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 import Course from './Course';
+import config from '../config';
 
 export default function Courses() {
     const [courses, setCourses] = useState([])
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/courses')
-            .then(res => {
-                setCourses(res.data.map(c => c))
-            })
+        let url = config.apiBaseUrl + "/courses"
+        axios.get(url)
+            .then(res => setCourses(res.data.map(c => c)))
+            .catch(error => console.log('Error fetching and parsing courses data', error))
     }, [])
 
     return (
