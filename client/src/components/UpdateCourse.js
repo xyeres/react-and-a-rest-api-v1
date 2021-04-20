@@ -15,9 +15,11 @@ export default function UpdateCourse(props) {
         axios.get(url, {
             cancelToken: new axios.CancelToken(c => cancel = c)
         })
-            .then(res => setCourse(res.data))
+            .then(res => {
+                setCourse(res.data)
+                console.log(res.data)
+            })
             .catch(error => console.log('Error fetching and parsing course data', error))
-            .finally()
 
         return () => cancel()
     }, [id])
@@ -30,34 +32,37 @@ export default function UpdateCourse(props) {
     }
 
     return (
-        <div className="wrap">
-            <h2>Update Course</h2>
-            <form>
-                <div className="main--flex">
-                    <div>
-                        <label htmlFor="courseTitle">Course Title</label>
-                        <input id="courseTitle" name="courseTitle" type="text" value="Build a Basic Bookcase" />
+        <>
+            {course.map(c => (
+                <div key={c.title}>
+                    <div className="wrap">
+                        <h2>Update Course</h2>
+                        <form>
+                            <div className="main--flex">
+                                <div>
+                                    <label htmlFor="courseTitle">Course Title</label>
+                                    <input id="courseTitle" name="courseTitle" type="text" value={c.title} />
 
-                        <label htmlFor="courseAuthor">Course Author</label>
-                        <input id="courseAuthor" name="courseAuthor" type="text" value="Joe Smith" />
+                                    <label htmlFor="courseAuthor">Course Author</label>
+                                    <input id="courseAuthor" name="courseAuthor" type="text" disabled={true} defaultValue={`${c.user.firstName} ${c.user.lastName}`} />
 
-                        <label htmlFor="courseDescription">Course Description</label>
-                        <textarea id="courseDescription" name="courseDescription">
-                        </textarea>
-                    </div>
-                    <div>
-                        <label htmlFor="estimatedTime">Estimated Time</label>
-                        <input id="estimatedTime" name="estimatedTime" type="text" value="14 hours" />
+                                    <label htmlFor="courseDescription">Course Description</label>
+                                    <textarea id="courseDescription" name="courseDescription" value={c.description}></textarea>
+                                </div>
+                                <div>
+                                    <label htmlFor="estimatedTime">Estimated Time</label>
+                                    <input id="estimatedTime" name="estimatedTime" type="text" value={c.estimatedTime} />
 
-                        <label htmlFor="materialsNeeded">Materials Needed</label>
-                        <textarea id="materialsNeeded" name="materialsNeeded">
-                        
-                        </textarea>
+                                    <label htmlFor="materialsNeeded">Materials Needed</label>
+                                    <textarea id="materialsNeeded" name="materialsNeeded" value={c.materialsNeeded}></textarea>
+                                </div>
+                            </div>
+                            <button className="button" type="submit">Update Course</button>
+                            <button className="button button-secondary" onClick={handleCancel}>Cancel</button>
+                        </form>
                     </div>
                 </div>
-                <button className="button" type="submit">Update Course</button>
-                <button className="button button-secondary" onClick={handleCancel}>Cancel</button>
-            </form>
-        </div>
+            ))}
+        </>
     )
 }
