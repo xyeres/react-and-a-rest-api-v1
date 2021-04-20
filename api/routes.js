@@ -57,7 +57,7 @@ router.get('/courses', asyncHandler(async (req, res) => {
 router.get('/courses/:id', asyncHandler(async (req, res) => {
     const courseId = req.params.id;
 
-    const course = await Course.findOne({ // find course and include related users
+    const course = await Course.findAll({ // find course and include related users
         where: { id: courseId },
         include: [
             {
