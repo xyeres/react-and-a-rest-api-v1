@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom'
+import { Context } from '../Context';
+import Form from './Form';
 
 
 export default function UserSignUp() {
+    const context = useContext(Context);
     const history = useHistory();
+
+    // Set state
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [pass, setPass] = useState('');
-    const [passConfirm, setPassConfirm] = useState('');
+    const [emailAddress, setEmailAddress] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [errors, setErrors] = useState([])
 
-    function handleCancel(e) {
-        e.preventDefault();
+
+    function cancel() {
         history.push('/');
     }
-
+    // *Update and Handle State Changes
     function handleFirstNameChange(e) {
         setFirstName(e.target.value);
     }
@@ -24,35 +30,88 @@ export default function UserSignUp() {
     }
 
     function handleEmailChange(e) {
-        setEmail(e.target.value);
+        setEmailAddress(e.target.value);
     }
 
-    function handlePassChange(e) {
-        setPass(e.target.value);
+    function handlePasswordChange(e) {
+        setPassword(e.target.value);
     }
 
-    function handlePassConfirmChange(e) {
-        setPassConfirm(e.target.value);
+    function handlePasswordConfirmChange(e) {
+        setPasswordConfirm(e.target.value);
     }
-    
+
+    // Handle submit
+    function submit() {
+        // create user
+        const user = {
+            firstName,
+            lastName,
+            emailAddress,
+            password
+        }
+
+        context.data.createUser(user)
+            .then(errors => {
+                if (errors.length) {
+                    setErrors(errors);
+                } else { // sign user in and push them to home page
+                    context.actions.signIn(emailAddress, password)
+                        .then(() => {
+                            history.push('/');
+                        });
+                }
+            })
+            .catch(err => console.log(err));
+    }
+
     return (
         <div className="form--centered">
             <h2>Sign Up</h2>
-
-            <form>
-                <label htmlFor="firstName">First Name</label>
-                <input name="firstName" type="text" onChange={handleFirstNameChange} value={firstName} />
-                <label htmlFor="lastName">Last Name</label>
-                <input name="lastName" type="text" onChange={handleLastNameChange} value={lastName} />
-                <label htmlFor="emailAddress">Email Address</label>
-                <input name="emailAddress" type="email" onChange={handleEmailChange} value={email} />
-                <label htmlFor="password">Password</label>
-                <input name="password" autoComplete="false" onChange={handlePassChange} type="password" value={pass} />
-                <label htmlFor="confirmPassword">Confirm Password</label>
-                <input name="confirmPassword" autoComplete="false" type="password" onChange={handlePassConfirmChange} value={passConfirm} />
-                <button className="button" type="submit">Sign Up</button>
-                <button className="button button-secondary" onClick={handleCancel}>Cancel</button>
-            </form>
+            <Form
+                cancel={cancel}
+                errors={errors}
+                submit={submit}
+                submitButtonText="Sign Up"
+                elements={() => (
+                    <React.Fragment>
+                        <input
+                            id="firstName"
+                            name="firstName"
+                            type="text"
+                            value={firstName}
+                            onChange={handleFirstNameChange}
+                            placeholder="First Name" />
+                        <input
+                            id="lastName"
+                            name="lastName"
+                            type="text"
+                            value={lastName}
+                            onChange={handleLastNameChange}
+                            placeholder="Last Name" />
+                        <input
+                            id="emailAddress"
+                            name="emailAddress"
+                            type="text"
+                            value={emailAddress}
+                            onChange={handleEmailChange}
+                            placeholder="Email Address" />
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            value={password}
+                            onChange={handlePasswordChange}
+                            placeholder="Password" />
+                        <input
+                            id="passwordConfirm"
+                            name="passwordConfirm"
+                            type="password"
+                            value={passwordConfirm}
+                            onChange={handlePasswordConfirmChange}
+                            placeholder="Confirm Password" />
+                    </React.Fragment>
+                )} />
             <p>Already have a user account? Click here to <Link to="/signin">sign in</Link>!</p>
         </div>
     )
