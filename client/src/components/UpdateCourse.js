@@ -31,6 +31,11 @@ export default function UpdateCourse(props) {
         history.push('/');
     }
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target
+        setCourse({ ...course, [name]: value })
+      }
+
     return (
         <>
             {course.map(c => (
@@ -40,14 +45,14 @@ export default function UpdateCourse(props) {
                         <form>
                             <div className="main--flex">
                                 <div>
-                                    <label htmlFor="courseTitle">Course Title</label>
-                                    <input id="courseTitle" name="courseTitle" type="text" value={c.title} />
+                                    <label htmlFor="title">Course Title</label>
+                                    <input id="title" name="title" type="text" onChange={handleInputChange} value={c.title} />
 
                                     <label htmlFor="courseAuthor">Course Author</label>
                                     <input id="courseAuthor" name="courseAuthor" type="text" disabled={true} defaultValue={`${c.user.firstName} ${c.user.lastName}`} />
 
-                                    <label htmlFor="courseDescription">Course Description</label>
-                                    <textarea id="courseDescription" name="courseDescription" value={c.description}></textarea>
+                                    <label htmlFor="description">Course Description</label>
+                                    <textarea id="description" name="description" value={c.description}></textarea>
                                 </div>
                                 <div>
                                     <label htmlFor="estimatedTime">Estimated Time</label>
