@@ -8,10 +8,14 @@ export default function Courses() {
     const [courses, setCourses] = useState([])
 
     useEffect(() => {
-        let url = config.apiBaseUrl + "/courses"
-        axios.get(url)
+        let url = config.apiBaseUrl + "/courses";
+        let cancel;
+        axios.get(url, {
+            cancelToken: new axios.CancelToken(c => cancel = c)
+        })
             .then(res => setCourses(res.data.map(c => c)))
             .catch(error => console.log('Error fetching and parsing courses data', error))
+        return () => cancel();
     }, [])
 
     return (
