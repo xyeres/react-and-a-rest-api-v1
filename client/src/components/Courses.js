@@ -1,35 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
-import axios from 'axios';
-import Course from './Course';
-import config from '../config';
+import React, { useContext, useEffect, useState } from 'react';
+import CourseList from './CourseList';
+import NewCourse from './NewCourse';
+import { Context } from '../Context';
 
 export default function Courses() {
-    const [courses, setCourses] = useState([])
+    const context = useContext(Context);
+    const [data, setData] = useState([])
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        let url = config.apiBaseUrl + "/courses";
-        let cancel;
-        axios.get(url, {
-            cancelToken: new axios.CancelToken(c => cancel = c)
-        })
-            .then(res => setCourses(res.data.map(c => c)))
-            .catch(error => console.log('Error fetching and parsing courses data', error))
-        return () => cancel();
-    }, [])
+        let ignore = false;
 
-    return (
-        <div className="wrap main--grid">
-            {courses.map(c => (
-                <Course key={c.id} course={c} />
-            ))}
-            <Link className="course--module course--add--module" to="/courses/create">
-                <span className="course--add--title">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                        viewBox="0 0 13 13" className="add"><polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "></polygon></svg>
-                        New Course
-                    </span>
-            </Link>
-        </div>
-    )
+        async function fetchData() {
+            const response = await context.data.api("/courses")
+            if (!ignore) {
+                response.json().then(data => setData(data))
+                .catch(error => console.log('Error fetching and parsing courses data', error))
+                .finally(setIsLoading(false))
+            }
+            
+        }
+        fetchData();
+        return () => { ignore = true; }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [])
+
+return (
+    <div className="wrap main--grid">
+        {
+            isLoading ?
+                <p>Loading courses...</p>
+                : <> <CourseList data={data} />  <NewCourse /> </>
+        }
+    </div>
+)
 }
