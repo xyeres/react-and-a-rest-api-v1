@@ -1,10 +1,9 @@
 
 export default function errorHandler(err, history) {
-    console.log(err)
     if (err.status === 401 || err.status === 403) {
         history.push('/forbidden')
     }
-    if (err.status === 500) {
+    if (err.status === 500 || err.message.includes('NetworkError')) {
         history.push('/error')
     }
     if (err.status === 404) {

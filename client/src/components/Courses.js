@@ -2,8 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import CourseList from './CourseList';
 import NewCourse from './NewCourse';
 import { Context } from '../Context';
+import errorHandler from '../errorHandler';
+import { useHistory } from 'react-router';
 
 export default function Courses() {
+    const history = useHistory();
     const context = useContext(Context);
     const [data, setData] = useState([])
     const [isLoading, setIsLoading] = useState(true);
@@ -15,7 +18,7 @@ export default function Courses() {
                 const data = await response.json();
                 setData(data)
             } catch (error) {
-                console.log('Error fetching and parsing courses data', error)
+                errorHandler(error, history)
             } finally {
                 setIsLoading(false)
             }
