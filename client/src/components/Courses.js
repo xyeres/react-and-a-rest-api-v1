@@ -9,29 +9,28 @@ export default function Courses() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        let ignore = false;
-
         async function fetchData() {
-            const response = await context.data.api("/courses")
-            if (!ignore) {
-                response.json().then(data => setData(data))
-                .catch(error => console.log('Error fetching and parsing courses data', error))
-                .finally(setIsLoading(false))
+            try {
+                const response = await context.data.api("/courses")
+                const data = await response.json();
+                setData(data)
+            } catch (error) {
+                console.log('Error fetching and parsing courses data', error)
+            } finally {
+                setIsLoading(false)
             }
-            
         }
         fetchData();
-        return () => { ignore = true; }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-return (
-    <div className="wrap main--grid">
-        {
-            isLoading ?
-                <p>Loading courses...</p>
-                : <> <CourseList data={data} />  <NewCourse /> </>
-        }
-    </div>
-)
+    return (
+        <div className="wrap main--grid">
+            {
+                isLoading ?
+                    <p>Loading courses...</p>
+                    : <> <CourseList data={data} />  <NewCourse /> </>
+            }
+        </div>
+    )
 }
