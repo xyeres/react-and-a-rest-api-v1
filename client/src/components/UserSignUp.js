@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom'
 import { Context } from '../Context';
+import errorHandler from '../errorHandler';
 import Form from './Form';
 
 
@@ -62,7 +63,7 @@ export default function UserSignUp() {
                         });
                 }
             })
-            .catch(err => console.log(err));
+            .catch(err => errorHandler(err, history));
     }
 
     return (

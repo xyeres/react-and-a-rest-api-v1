@@ -33,7 +33,9 @@ export default class Data {
       });
     }
     else {
-      throw new Error();
+      let err = new Error();
+      err.status = response.status;
+      throw err;
     }
   }
 
@@ -45,10 +47,10 @@ export default class Data {
       return response.json().then(data => {
         return data.errors;
       });
-    } else if (response.status === 403) {
-      return 403;
     } else {
-      throw new Error();
+      let err = new Error();
+      err.status = response.status;
+      throw err;
     }
   }
 
@@ -57,11 +59,10 @@ export default class Data {
     if (response.status === 204) {
       return [];
     }
-    else if (response.status === 401) {
-      return null;
-    }
     else {
-      throw new Error();
+      let err = new Error();
+      err.status = response.status;
+      throw err;
     }
   }
 
@@ -98,7 +99,9 @@ export default class Data {
       });
     }
     else {
-      throw new Error();
+      let err = new Error();
+      err.status = response.status;
+      throw err;
     }
   }
 }

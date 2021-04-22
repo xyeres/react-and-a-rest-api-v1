@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'
 import { Context } from '../Context';
 import Form from './Form';
+import errorHandler from '../errorHandler';
 
 export default function UpdateCourse(props) {
     const context = useContext(Context);
@@ -11,34 +12,22 @@ export default function UpdateCourse(props) {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [author, setAuthor] = useState('');
     const [time, setTime] = useState('');
     const [mats, setMats] = useState('');
     const [errors, setErrors] = useState([])
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await context.data.api(`/courses/${id}`)
-                if (response.status === 404) {
-                    history.push('/notfound');
-                } else {
-                    const data = await response.json();
-                    setTitle(data[0].title)
-                    setDescription(data[0].description)
-                    if (data[0].estimatedTime) setTime(data[0].estimatedTime)
-                    if (data[0].materialsNeeded) setMats(data[0].materialsNeeded)
-                }
-            } catch (error) {
-                console.log('Error fetching and parsing courses data', error)
-            }
-        }
-        fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-
-
-
+        context.data.getCourse(id)
+            .then(data => {
+                setTitle(data[0].title)
+                setDescription(data[0].description)
+                setAuthor(`${data[0].user.firstName} ${data[0].user.lastName}`)
+                if (data[0].estimatedTime) setTime(data[0].estimatedTime)
+                if (data[0].materialsNeeded) setMats(data[0].materialsNeeded)
+            })
+            .catch(err => errorHandler(err, history));
+    }, [context.data, id, history])
 
     function cancel() {
         history.push(`/courses/${id}`);
@@ -69,16 +58,13 @@ export default function UpdateCourse(props) {
         // create the course in the DB
         context.data.updateCourse(emailAddress, password, course, id)
             .then(errors => {
-                if (errors === 403) {
-                    history.push('/forbidden')
-                }
-                else if (errors.length) {
+                if (errors.length) {
                     setErrors(errors);
                 } else {
                     history.push(`/courses/${id}`);
                 }
             })
-            .catch(err => console.log(err));
+            .catch(err => errorHandler(err, history));
     }
 
 
@@ -105,7 +91,7 @@ export default function UpdateCourse(props) {
                                     id="courseAuthor"
                                     name="courseAuthor"
                                     type="text"
-                                    value={`${authUser.firstName} ${authUser.lastName}`}
+                                    value={author}
                                     disabled={true}
                                     placeholder="Author" />
                                 <textarea

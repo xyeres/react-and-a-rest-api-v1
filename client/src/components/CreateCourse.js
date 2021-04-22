@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom'
 import { Context } from '../Context';
+import errorHandler from '../errorHandler';
 import Form from './Form';
 
 export default function CreateCourse(props) {
@@ -49,7 +50,7 @@ export default function CreateCourse(props) {
                     history.push('/');
                 }
             })
-            .catch(err => console.log(err));
+            .catch(err => errorHandler(err, history));
     }
 
 
