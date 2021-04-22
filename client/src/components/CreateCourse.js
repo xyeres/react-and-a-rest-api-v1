@@ -9,7 +9,6 @@ export default function CreateCourse(props) {
     const history = useHistory();
 
     const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('Joe Blow');
     const [description, setDescription] = useState('');
     const [time, setTime] = useState('');
     const [mats, setMats] = useState('');
@@ -57,7 +56,6 @@ export default function CreateCourse(props) {
     return (
         <div className="wrap">
             <h2>Create Course</h2>
-
             <Form
                 cancel={cancel}
                 errors={errors}
@@ -65,7 +63,7 @@ export default function CreateCourse(props) {
                 submitButtonText="Create Course"
                 elements={() => (
                     <React.Fragment>
-                        <div class="main--flex">
+                        <div className="main--flex">
                             <div>
                                 <input
                                     id="courseTitle"

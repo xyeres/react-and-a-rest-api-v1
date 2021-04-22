@@ -11,11 +11,10 @@ export default function CourseDetail(props) {
     const authUser = context.authenticatedUser;
 
     const [course, setCourse] = useState([]);
-
     let id = props.match.params.id;
-    let url = config.apiBaseUrl + `/courses/${id}`
 
     useEffect(() => {
+        let url = config.apiBaseUrl + `/courses/${id}`
 
         axios(url)
             .then(res => setCourse(res.data))
@@ -37,12 +36,14 @@ export default function CourseDetail(props) {
                     <div className="actions--bar">
                         <div className="wrap">
                             {
+                                authUser ?
                                 authUser.id === c.user.id ?
                                     <React.Fragment>
                                         <Link className="button" to={`/courses/${c.id}/update`}>Update Course</Link>
                                         <button className="button" onClick={handleDelete}>Delete Course</button>
                                     </React.Fragment>
                                     : null
+                                : null
                             }
                             <Link className="button button-secondary" to="/">Return to List</Link>
                         </div>

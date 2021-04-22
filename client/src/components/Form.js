@@ -1,7 +1,7 @@
 import React from 'react';
 import ErrorsDisplay from './ErrorsDisplay';
 
-export default (props) => {
+export default function Form(props) {
   const {
     cancel,
     errors,
