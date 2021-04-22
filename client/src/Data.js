@@ -45,8 +45,9 @@ export default class Data {
       return response.json().then(data => {
         return data.errors;
       });
-    }
-    else {
+    } else if (response.status === 403) {
+      return 403;
+    } else {
       throw new Error();
     }
   }
@@ -64,15 +65,24 @@ export default class Data {
     }
   }
 
+  async getCourse(id) {
+    const response = await this.api(`/courses/${id}`);
+    if (response.status === 200) {
+      return response.json().then(data => data);
+    } else {
+      let err = new Error();
+      err.status = response.status;
+      throw err;
+    }
+  }
+
   async getUser(emailAddress, password) {
     const response = await this.api(`/users`, 'GET', null, true, { emailAddress, password });
     if (response.status === 200) {
       return response.json().then(data => data);
-    }
-    else if (response.status === 401) {
+    } else if (response.status === 401) {
       return null;
-    }
-    else {
+    } else {
       throw new Error();
     }
   }

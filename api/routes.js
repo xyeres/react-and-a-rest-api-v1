@@ -69,7 +69,11 @@ router.get('/courses/:id', asyncHandler(async (req, res) => {
         attributes: { exclude: ['createdAt', 'updatedAt'] }
 
     });
-    res.status(200).json(course);
+    if (course.length) {
+        res.status(500).json(course);
+    } else {
+        res.status(404).json({ message: "Course not found" });
+    }
 }));
 
 // Create new course

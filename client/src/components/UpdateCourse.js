@@ -15,16 +15,19 @@ export default function UpdateCourse(props) {
     const [mats, setMats] = useState('');
     const [errors, setErrors] = useState([])
 
-
     useEffect(() => {
         async function fetchData() {
             try {
                 const response = await context.data.api(`/courses/${id}`)
-                const data = await response.json();
-                setTitle(data[0].title)
-                setDescription(data[0].description)
-                if (data[0].estimatedTime) setTime(data[0].estimatedTime)
-                if (data[0].materialsNeeded) setMats(data[0].materialsNeeded)
+                if (response.status === 404) {
+                    history.push('/notfound');
+                } else {
+                    const data = await response.json();
+                    setTitle(data[0].title)
+                    setDescription(data[0].description)
+                    if (data[0].estimatedTime) setTime(data[0].estimatedTime)
+                    if (data[0].materialsNeeded) setMats(data[0].materialsNeeded)
+                }
             } catch (error) {
                 console.log('Error fetching and parsing courses data', error)
             }
@@ -66,7 +69,10 @@ export default function UpdateCourse(props) {
         // create the course in the DB
         context.data.updateCourse(emailAddress, password, course, id)
             .then(errors => {
-                if (errors.length) {
+                if (errors === 403) {
+                    history.push('/forbidden')
+                }
+                else if (errors.length) {
                     setErrors(errors);
                 } else {
                     history.push(`/courses/${id}`);
