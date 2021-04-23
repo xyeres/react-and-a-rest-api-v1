@@ -64,6 +64,7 @@ export default class UserSignIn extends Component {
         const { emailAddress, password } = this.state;
         context.actions.signIn(emailAddress, password)
             .then(user => {
+                console.log(user)
                 if (user === null) {
                     this.setState(() => {
                         return { errors: ['Sign-in was unsuccessful'] };
@@ -74,8 +75,13 @@ export default class UserSignIn extends Component {
                 }
             })
             .catch(err => {
-                console.log(err);
-                this.props.history.push('/error');
+                if (err.message.includes('user is null')) {
+                    this.setState(() => {
+                        return { errors: ['Sign-in was unsuccessful'] };
+                    })
+                } else {
+                    this.props.history.push('/error');
+                }
             })
     }
 
