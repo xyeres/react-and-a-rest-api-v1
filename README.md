@@ -5,3 +5,12 @@ I have implemented both basic project requirements and exceeds expectations.
 To get running: 
 - cd into `/api` and run `npm install` and then `npm run` to start REST server
 - cd into `/client` and run `npm install` and then `npm run` to start App
+
+
+## Exceeds Expectations Features: 
+- Display user friendly messages
+    - NotFound - Display a message letting the user know that the requested page can't be found.
+    - Forbidden - Displays a message letting the user know that they can't access the requested page.
+    - UnhandledError - Display a message letting the user know that an unexpected error has occurred.
+- Persist user credentials
+- Redirecting the user after successfully signing in
