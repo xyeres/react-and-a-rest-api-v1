@@ -4,7 +4,10 @@ import { Context } from '../Context';
 import errorHandler from '../errorHandler';
 import Form from './Form';
 
-export default function CreateCourse(props) {
+/**
+  * Allow a signed-in user to create a course
+*/
+export default function CreateCourse() {
     const context = useContext(Context);
     const authUser = context.authenticatedUser;
     const history = useHistory();
@@ -52,8 +55,6 @@ export default function CreateCourse(props) {
             })
             .catch(err => errorHandler(err, history));
     }
-
-
     return (
         <div className="wrap">
             <h2>Create Course</h2>

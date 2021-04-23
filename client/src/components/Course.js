@@ -1,6 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+
+  /**
+    * Course fragment for main courses page
+  */
 export default function Course(props) {
     const course = props.course;
     return (

@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Form from './Form';
 
+/**
+  * Allow user to signin, validate errors if they occur
+*/
 export default class UserSignIn extends Component {
     state = {
         emailAddress: '',
@@ -64,18 +67,16 @@ export default class UserSignIn extends Component {
         const { emailAddress, password } = this.state;
         context.actions.signIn(emailAddress, password)
             .then(user => {
-                console.log(user)
                 if (user === null) {
                     this.setState(() => {
                         return { errors: ['Sign-in was unsuccessful'] };
                     });
                 } else {
-                    console.log(`SUCCESS! ${emailAddress} is now signed in!`);
                     this.props.history.push(from);
                 }
             })
             .catch(err => {
-                if (err.message.includes('user is null')) {
+                if (err.message.includes('null')) {
                     this.setState(() => {
                         return { errors: ['Sign-in was unsuccessful'] };
                     })

@@ -1,7 +1,9 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Context } from '../Context';
-
+/**
+  * Site's header, stateless component
+*/
 export default function Header() {
     const context = useContext(Context);
     const authUser = context.authenticatedUser;

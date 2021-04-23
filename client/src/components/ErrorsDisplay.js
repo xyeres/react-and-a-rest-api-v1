@@ -1,3 +1,6 @@
+/**
+  * Renders validation errors if they are present in a form
+*/
 export default function ErrorsDisplay({ errors }) {
     let errorsDisplay = null;
 

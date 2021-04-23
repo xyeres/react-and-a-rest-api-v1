@@ -5,6 +5,9 @@ import { Context } from '../Context';
 import errorHandler from '../errorHandler';
 import { useHistory } from 'react-router';
 
+/**
+  * Renders all courses, this is the main page of the site
+*/
 export default function Courses() {
     const history = useHistory();
     const context = useContext(Context);
@@ -12,6 +15,9 @@ export default function Courses() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        // Get courses using an in-line async fetch,
+        // This was done for educational purposes, 
+        // TODO future: use our custom Data.js API method to get data
         async function fetchData() {
             try {
                 const response = await context.data.api("/courses")

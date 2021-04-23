@@ -2,6 +2,10 @@ import React from 'react';
 import Course from './Course';
 import NoCourses from './NoCourses'
 
+/**
+  * Renders the course list and if there are no courses, renders the NoCourse
+  * component
+*/
 export default function CourseList(props) {
     let courses;
     const results = props.data;

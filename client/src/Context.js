@@ -7,6 +7,7 @@ export const Context = React.createContext();
 export class Provider extends Component {
   constructor() {
     super();
+    // Add our Data class API helper class to extend custom API calls
     this.data = new Data();
   }
 
@@ -17,6 +18,7 @@ export class Provider extends Component {
   render() {
     const { authenticatedUser } = this.state;
 
+    // Set value for provider, this object is accessible site wide via Context API
     const value = {
       authenticatedUser,
       data: this.data,
@@ -33,6 +35,9 @@ export class Provider extends Component {
     );
   }
 
+  /*
+    Helper functions to Sign in, Sign Out users
+  */
   signIn = async (emailAddress, password) => {
     const user = await this.data.getUser(emailAddress, password);
     user['password'] = password;
@@ -43,7 +48,7 @@ export class Provider extends Component {
           authenticatedUser: user,
         };
       });
-      Cookies.set('authenticatedUser', JSON.stringify(user), { expires: 1 });
+      Cookies.set('authenticatedUser', JSON.stringify(user), { expires: 1, sameSite: false, secure: false });
     }
     return user;
   }

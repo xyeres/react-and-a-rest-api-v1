@@ -4,6 +4,10 @@ import { Context } from '../Context';
 import Form from './Form';
 import errorHandler from '../errorHandler';
 
+/**
+  * Allow an authorized user to update their courses, they must be the original
+  * course author to edit
+*/
 export default function UpdateCourse(props) {
     const context = useContext(Context);
     const authUser = context.authenticatedUser;
@@ -17,6 +21,7 @@ export default function UpdateCourse(props) {
     const [mats, setMats] = useState('');
     const [errors, setErrors] = useState([])
 
+    // Get the course we are going to edit
     useEffect(() => {
         context.data.getCourse(id)
             .then(data => {
@@ -29,23 +34,14 @@ export default function UpdateCourse(props) {
             .catch(err => errorHandler(err, history));
     }, [context.data, id, history])
 
-    function cancel() {
-        history.push(`/courses/${id}`);
-    }
-
-    function handleTitleChange(e) {
-        setTitle(e.target.value);
-    }
-    function handleTimeChange(e) {
-        setTime(e.target.value);
-    }
-    function handleDescriptionChange(e) {
-        setDescription(e.target.value);
-    }
-    function handleMatsChange(e) {
-        setMats(e.target.value);
-    }
-
+    // Handle form field changes
+    const handleTitleChange = (e) => setTitle(e.target.value);
+    const handleTimeChange = (e) => setTime(e.target.value);
+    const handleDescriptionChange = (e) => setDescription(e.target.value);
+    const handleMatsChange = (e) => setMats(e.target.value);
+    
+    // Handle Submit and cancel
+    const cancel = () => history.push(`/courses/${id}`);
     function submit() {
         const { emailAddress, password } = authUser;
         const course = {
@@ -53,8 +49,8 @@ export default function UpdateCourse(props) {
             description,
             userId: authUser.id
         }
-        if (mats) course['materialsNeeded'] = mats;
-        if (time) course['estimatedTime'] = time;
+        course['materialsNeeded'] = mats; // Update these everytime in case they are blank
+        course['estimatedTime'] = time;
         // create the course in the DB
         context.data.updateCourse(emailAddress, password, course, id)
             .then(errors => {
@@ -66,7 +62,6 @@ export default function UpdateCourse(props) {
             })
             .catch(err => errorHandler(err, history));
     }
-
 
     return (
         <div className="wrap">

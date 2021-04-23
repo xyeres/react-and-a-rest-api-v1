@@ -1,6 +1,8 @@
 import React from 'react';
 import ErrorsDisplay from './ErrorsDisplay';
-
+/**
+  * Simple form builder that also renders validation errors if they occur
+*/
 export default function Form(props) {
   const {
     cancel,

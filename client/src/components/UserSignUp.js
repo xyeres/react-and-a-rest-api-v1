@@ -4,7 +4,10 @@ import { Context } from '../Context';
 import errorHandler from '../errorHandler';
 import Form from './Form';
 
-
+/**
+  * Signup a user out and redirect them to the root route upon success
+  * Return Validation errors if fields are incorrectly filled 
+*/
 export default function UserSignUp() {
     const context = useContext(Context);
     const history = useHistory();

@@ -1,5 +1,8 @@
 import React from 'react'
 
+/**
+  * Global unhandled event message for user
+*/
 export default function UnhandledError({error}) {
     return (
         <div className="wrap">

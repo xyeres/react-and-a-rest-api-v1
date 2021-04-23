@@ -1,5 +1,8 @@
 import React from 'react'
 
+/**
+  * Simple global 404 error 
+*/
 export default function NotFound() {
     return (
         <div className="wrap">

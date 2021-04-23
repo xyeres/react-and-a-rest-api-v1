@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+/**
+  * New course card
+*/
 export default function NewCourse(props) {
 
     return (

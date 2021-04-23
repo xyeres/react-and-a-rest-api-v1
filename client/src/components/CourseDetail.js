@@ -4,40 +4,43 @@ import { Link, useHistory } from 'react-router-dom'
 import { Context } from '../Context';
 import errorHandler from '../errorHandler';
 
+
+/**
+  * Renders a course's full details, and will conditionally
+  * render update and delete buttons if user has perms
+*/
 export default function CourseDetail(props) {
+    // Get the ID of the course we want to show
+    const id = props.match.params.id;
+    // Generate glorious history
     const history = useHistory();
-    // Get global context
+    // Set context
     const context = useContext(Context);
     const authUser = context.authenticatedUser;
+
     const [course, setCourse] = useState([]);
-    let id = props.match.params.id;
 
 
     useEffect(() => {
+        // Get course from API
         context.data.getCourse(id)
             .then(data => setCourse(data))
             .catch(err => errorHandler(err, history));
     }, [context.data, id, history])
 
-    function handleDelete(e) {
-        e.preventDefault();
-        const { emailAddress, password } = authUser;
-        context.data.deleteCourse(emailAddress, password, id)
-            .then(history.push('/'))
-            .catch(err => errorHandler(err, history))
-    }
 
     return (
+        // Loop result and render course details
         <>{course.map(c => (
             <div key={c.title}>
                 <div className="actions--bar">
                     <div className="wrap">
                         {
-                            authUser ?
-                                authUser.id === c.user.id ?
+                            authUser ? // if the user is signed in...
+                                authUser.id === c.user.id ? // show update and delete btns if they are the course owner
                                     <React.Fragment>
                                         <Link className="button" to={`/courses/${c.id}/update`}>Update Course</Link>
-                                        <button className="button" onClick={handleDelete}>Delete Course</button>
+                                        <Link className="button" to={`${c.id}/delete`}>Delete Course</Link>
                                     </React.Fragment>
                                     : null
                                 : null
@@ -58,23 +61,21 @@ export default function CourseDetail(props) {
                                 </ReactMarkdown>
                             </div>
                             <div>
-                                <h3 className="course--detail--title">Estimated Time</h3>
-                                <p>
-                                    {
-                                        c.estimatedTime ?
-                                            c.estimatedTime
-                                            : <em>None provided</em>
-                                    }
-                                </p>
-
-                                <h3 className="course--detail--title">Materials Needed</h3>
-                                <ul className="course--detail--list">
-                                    {
-                                        c.materialsNeeded ?
-                                            c.materialsNeeded.split('\n').map(item => <ReactMarkdown key={item}>{item}</ReactMarkdown>)
-                                            : <ReactMarkdown>Just your imagination</ReactMarkdown>
-                                    }
-                                </ul>
+                                {/* Not all courses have esitmated time so we check for it */}
+                                {c.estimatedTime ?
+                                    <>
+                                        <h3 className="course--detail--title">Estimated Time</h3>
+                                        <p>{c.estimatedTime}</p>
+                                    </>
+                                    : null}
+                                {c.materialsNeeded ?
+                                    <>
+                                        <h3 className="course--detail--title">Materials Needed</h3>
+                                        <ul className="course--detail--list">
+                                            <ReactMarkdown>{c.materialsNeeded}</ReactMarkdown>
+                                        </ul>
+                                    </>
+                                    : null}
                             </div>
                         </div>
                     </form>
