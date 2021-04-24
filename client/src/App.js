@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 
 // *Functions
 import withContext from './Context';
@@ -21,7 +21,7 @@ import ConfirmDelete from './components/ConfirmDelete';
 
 // * Functions to Inject context
 // Class based component require context injection, this was a one-off for experience
-const UserSignInWithContext = withContext(UserSignIn); 
+const UserSignInWithContext = withContext(UserSignIn);
 
 function App() {
   return (
@@ -42,7 +42,7 @@ function App() {
           <Route exact path="/notfound" component={NotFound} />
           <Route exact path="/error" component={UnhandledError} />
           {/* 404 */}
-          <Route component={NotFound} />
+          <Route render={() => <Redirect to={'/notfound'} />} />
         </Switch>
       </main>
     </BrowserRouter>
