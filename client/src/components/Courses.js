@@ -1,27 +1,42 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CourseList from './CourseList';
 import NewCourse from './NewCourse';
-import { Context } from '../Context';
 import errorHandler from '../errorHandler';
 import { useHistory } from 'react-router';
+import axios from 'axios';
 
 /**
   * Renders all courses, this is the main page of the site
 */
 export default function Courses() {
     const history = useHistory();
-    const context = useContext(Context);
     const [data, setData] = useState([])
     const [isLoading, setIsLoading] = useState(true);
-    
-    
+
     useEffect(() => {
-        // Get course from API
-        context.data.getCourses()
-            .then(data => setData(data))
-            .catch(err => errorHandler(err, history))
-            .finally(setIsLoading(false))
-    }, [context.data, history])
+        // Get courses using an in-line axios call,
+        // This was done for educational purposes, 
+        let cancel;
+        axios.get("http://localhost:5000/api/courses", {
+            cancelToken: new axios.CancelToken(c => cancel = c)
+        })
+        .then(res => {
+            if (res.status === 200) {
+                setData(res.data);
+            } else {
+                let err = new Error();
+                err.status = res.status;
+                err.message = 'An error occurred while fetching courses.'
+                throw err;
+            }
+        })
+        .catch((err) => {
+            errorHandler(err, history);
+        })
+        .finally(setIsLoading(false));
+
+        return () => cancel();
+    }, [history])
 
     return (
         <div className="wrap main--grid">
