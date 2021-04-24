@@ -13,25 +13,15 @@ export default function Courses() {
     const context = useContext(Context);
     const [data, setData] = useState([])
     const [isLoading, setIsLoading] = useState(true);
-
+    
+    
     useEffect(() => {
-        // Get courses using an in-line async fetch,
-        // This was done for educational purposes, 
-        // TODO future: use our custom Data.js API method to get data
-        async function fetchData() {
-            try {
-                const response = await context.data.api("/courses")
-                const data = await response.json();
-                setData(data)
-            } catch (error) {
-                errorHandler(error, history)
-            } finally {
-                setIsLoading(false)
-            }
-        }
-        fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        // Get course from API
+        context.data.getCourses()
+            .then(data => setData(data))
+            .catch(err => errorHandler(err, history))
+            .finally(setIsLoading(false))
+    }, [context.data, history])
 
     return (
         <div className="wrap main--grid">
