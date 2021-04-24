@@ -23,23 +23,32 @@ export default function UpdateCourse(props) {
 
     // Get the course we are going to edit
     useEffect(() => {
+        let authorId;
         context.data.getCourse(id)
             .then(data => {
                 setTitle(data[0].title)
                 setDescription(data[0].description)
                 setAuthor(`${data[0].user.firstName} ${data[0].user.lastName}`)
+                authorId = data[0].userId
                 if (data[0].estimatedTime) setTime(data[0].estimatedTime)
                 if (data[0].materialsNeeded) setMats(data[0].materialsNeeded)
+                return authorId;
+            })
+            .then(authorID => {
+                if (String(authUser.id) !== String(authorId)) {
+                    // console.log(String(authUser.id) !== String(authorID))
+                    // console.log(String(authUser.id), String(authorID))
+                    history.push('/forbidden')
+                }
             })
             .catch(err => errorHandler(err, history));
-    }, [context.data, id, history])
-
+    }, [context.data, id, history, authUser.id])
     // Handle form field changes
     const handleTitleChange = (e) => setTitle(e.target.value);
     const handleTimeChange = (e) => setTime(e.target.value);
     const handleDescriptionChange = (e) => setDescription(e.target.value);
     const handleMatsChange = (e) => setMats(e.target.value);
-    
+
     // Handle Submit and cancel
     const cancel = () => history.push(`/courses/${id}`);
     function submit() {
