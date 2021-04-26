@@ -3,8 +3,8 @@
 I have implemented both basic project requirements and exceeds expectations. 
 
 To get running: 
-- cd into `/api` and run `npm install` and then `npm run` to start REST server
-- cd into `/client` and run `npm install` and then `npm run` to start App
+- cd into `/api` and run `npm install` and then `npm start` to start REST server
+- In a new terminal window cd into `/client` and run `npm install` and then `npm start` to start App
 
 
 ## Exceeds Expectations Features: 
